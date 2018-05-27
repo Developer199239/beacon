@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Beacon</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_delete">Delete</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_action_exit">Exit</string>
+    <string name="dialog_error_title">Error</string>
+
+    <string name="dialog_error_functionality_limited">Functionality limited</string>
+    <string name="error_message_location_access_not_granted">\"Since location access has not been
+        granted, this app will not be able to discover beacons when in the background.
+    </string>
+    <string name="dialog_error_need_location_access">This app needs location access</string>
+    <string name="error_message_location_access_need_tobe_granted">Please grant location access so
+        this app can detect beacons in the background.
+    </string>
+    <string name="dialog_error_ble_not_enabled">Bluetooth not enabled</string>
+    <string name="error_message_please_enable_bluetooth">Please enable bluetooth in settings and
+        restart this application.
+    </string>
+    <string name="dialog_error_ble_not_supported">Bluetooth LE not available</string>
+    <string name="error_message_bluetooth_le_not_supported">Sorry, this device does not support
+        Bluetooth LE.
+    </string>
 </resources>

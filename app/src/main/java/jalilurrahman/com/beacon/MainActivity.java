@@ -1,12 +1,16 @@
 package jalilurrahman.com.beacon;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -31,6 +35,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer, RangeNotifier {
 
+    public static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private BeaconManager mBeaconManager;
     private Region mRegion;
     private boolean isReadyForScan;
@@ -50,9 +55,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.test);
         textView.setText("ok");
+
         mBeaconManager = BeaconManager.getInstanceForApplication(this);
         initBeaconManager();
         createScanner();
+
+
+        checkPermissions();
+        verifyBluetooth();
     }
 
     private void initBeaconManager() {
@@ -204,6 +214,68 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         }
     };
 
+
+    @TargetApi(23)
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                final Dialog permDialog = DialogBuilder.createSimpleOkErrorDialog(
+                        this,
+                        getString(R.string.dialog_error_need_location_access),
+                        getString(R.string.error_message_location_access_need_tobe_granted)
+                );
+                permDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @TargetApi(23)
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                PERMISSION_REQUEST_COARSE_LOCATION);
+                    }
+                });
+                permDialog.show();
+            }
+        }
+    }
+
+    @TargetApi(18)
+    private void verifyBluetooth() {
+
+        try {
+            if (!mBeaconManager.checkAvailability()) {
+
+                final Dialog bleDialog = DialogBuilder.createSimpleOkErrorDialog(
+                        this,
+                        getString(R.string.dialog_error_ble_not_enabled),
+                        getString(R.string.error_message_please_enable_bluetooth)
+                );
+                bleDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                        System.exit(0);
+                    }
+                });
+                bleDialog.show();
+
+            }
+        } catch (RuntimeException e) {
+
+            final Dialog bleDialog = DialogBuilder.createSimpleOkErrorDialog(
+                    this,
+                    getString(R.string.dialog_error_ble_not_supported),
+                    getString(R.string.error_message_bluetooth_le_not_supported)
+            );
+            bleDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    finish();
+                    System.exit(0);
+                }
+            });
+            bleDialog.show();
+        }
+    }
 
 
 }
