@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24"));
 
-        mBeaconManager.setBackgroundBetweenScanPeriod(15000L);   //Every 15 seconds scan nearest beacons
+        mBeaconManager.setBackgroundBetweenScanPeriod(3000L);   //Every 15 seconds scan nearest beacons
 
         mBeaconManager.setBackgroundScanPeriod(1000L);          // default is 10000L
         mBeaconManager.setForegroundBetweenScanPeriod(0L);      // default is 0L
@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             if (beacons.size() > 0 && region != null && region.equals(mRegion)) {
                 noGpsAlertHandler.sendEmptyMessage(2);
                 List<BeaconsInfo.BeaconData> beacondata = new ArrayList<BeaconsInfo.BeaconData>();
-
                 Iterator<Beacon> iterator = beacons.iterator();
                 while (iterator.hasNext()) {
 
